@@ -44,7 +44,9 @@
     "@tiptap/extension-collaboration": "^2.0.0",
     "@tiptap/extension-collaboration-cursor": "^2.0.0",
     "@tiptap/extension-heading": "^2.26.2",
+    "@tiptap/extension-image": "^2.26.2",
     "@tiptap/extension-italic": "^2.26.2",
+    "@tiptap/extension-link": "^2.0.0",
     "@tiptap/extension-underline": "^2.26.2",
     "@tiptap/pm": "^2.26.2",
     "@tiptap/react": "^2.26.2",
@@ -71,6 +73,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.9",
+    "y-prosemirror": "^1.0.20",
     "y-websocket": "^1.5.4",
     "yjs": "^13.6.27",
     "zod": "^3.25.76"
