@@ -14,6 +14,11 @@ import Link from "@tiptap/extension-link";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Image from "@tiptap/extension-image";
+import {TextStyle} from '@tiptap/extension-text-style'
+import { Color } from '@tiptap/extension-color'
+
+
+
 
 interface CollabEditorProps {
   docId: string;
@@ -42,10 +47,13 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
   const editor = useEditor(
     {
       extensions: [
+
         StarterKit.configure({
           history: false, // Y.js handles undo/redo
           paragraph: false,
         }),
+        TextStyle,
+        Color,
         Image.configure({
           inline: false,
           allowBase64: true,
@@ -590,6 +598,14 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
                     />
                   </svg>
                 </button>
+                 <input
+                    type="color"
+                    onChange={e => {
+                    const color = e.target.value
+                    editor?.chain().focus().setColor(color).run()
+                    }}
+                    title="Text Color"
+                />
               </div>
             </div>
           </div>
