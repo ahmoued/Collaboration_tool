@@ -10,21 +10,34 @@ import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
 import Heading from "@tiptap/extension-heading";
 import "./CollabEditor.css";
-import Link from "@tiptap/extension-link";
-import Paragraph from "@tiptap/extension-paragraph";
-import Text from "@tiptap/extension-text";
 import Image from "@tiptap/extension-image";
-import {TextStyle} from '@tiptap/extension-text-style'
-import { Color } from '@tiptap/extension-color'
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
 
-
-
+const CustomImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      align: {
+        default: "center", // left, center, right
+        parseHTML: (element) =>
+          (element.style.float as "left" | "center" | "right") || "center",
+        renderHTML: (attributes) => {
+          if (!attributes.align || attributes.align === "center") return {};
+          return {
+            style: `float: ${attributes.align}; margin: 0 1rem 1rem 0;`,
+          };
+        },
+      },
+    };
+  },
+});
 
 interface CollabEditorProps {
   docId: string;
   userName: string;
   userColor?: string;
-  initialContent?: string;
+  initialContent?: JSONContent;
   onUpdateContent?: (content: JSONContent) => void;
 }
 
@@ -47,32 +60,18 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
   const editor = useEditor(
     {
       extensions: [
-
         StarterKit.configure({
           history: false, // Y.js handles undo/redo
-          paragraph: false,
-        }),
-        TextStyle,
-        Color,
-        Image.configure({
-          inline: false,
-          allowBase64: true,
-          HTMLAttributes: {
-            class: "editor-image",
-          },
-        }),
-        Paragraph,
-        Text,
-        Link.configure({
-          openOnClick: true,
-          linkOnPaste: true,
-          HTMLAttributes: {
-            target: "_blank",
-            rel: "noopener noreferrer nofollow",
-          },
         }),
         Bold,
         Italic,
+        TextStyle,
+        Color,
+        CustomImage.configure({
+          inline: false,
+          allowBase64: true,
+          HTMLAttributes: { class: "editor-image" },
+        }),
         Underline,
         Heading.configure({
           levels: [1, 2, 3],
@@ -119,23 +118,46 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
   }, [provider, ydoc]);
 
   useEffect(() => {
-    if (!editor || !provider || !ydoc || !initialContent) return;
+    if (!editor || !provider || !ydoc) return;
 
-    const seedContent = () => {
+    const seedContentIfEmpty = async () => {
       const yXml = ydoc.get("prosemirror", Y.XmlFragment);
-      const isEmpty = yXml.length === 0;
 
-      if (isEmpty) {
-        // Push saved DB content into Y.Doc
-        editor.commands.setContent(initialContent as any);
+      console.log("=== INITIAL CONTENT DEBUG ===");
+      console.log("YDoc length:", yXml.length);
+      console.log("Initial content:", initialContent);
+      console.log("Provider synced:", provider.synced);
+      console.log("Editor ready:", !!editor);
+
+      // Wait until the provider has synced initial state
+      const onSynced = () => {
+        console.log("OnSynced called - YDoc length:", yXml.length);
+        console.log("Has initial content:", !!initialContent);
+
+        if (yXml.length === 0 && initialContent) {
+          console.log("Setting initial content:", initialContent);
+          // If Y.Doc is empty, seed it from your DB / initialContent
+          editor.commands.setContent(initialContent as any);
+        } else {
+          console.log(
+            "Not setting content - YDoc has content or no initialContent"
+          );
+        }
+      };
+
+      if (provider.synced) {
+        onSynced();
+      } else {
+        provider.once("synced", onSynced);
       }
     };
 
-    provider.once("synced", seedContent);
+    seedContentIfEmpty();
 
-    if (provider.synced) {
-      seedContent();
-    }
+    // Cleanup function
+    return () => {
+      provider?.off("synced", seedContentIfEmpty);
+    };
   }, [editor, provider, ydoc, initialContent]);
 
   return (
@@ -218,52 +240,6 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
         .editor-content .ProseMirror p {
           line-height: 1.7 !important;
           margin: 0.75rem 0 !important;
-        }
-        .editor-content .ProseMirror img,
-        .editor-content img,
-        img.editor-image {
-          max-width: 100% !important;
-          width: auto !important;
-          height: auto !important;
-          min-width: 100px !important;
-          min-height: 100px !important;
-          border-radius: 0.5rem !important;
-          margin: 1rem 0 !important;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-          border: 1px solid #e5e7eb !important;
-          display: block !important;
-          object-fit: cover !important;
-          cursor: grab !important;
-          transition: all 0.3s ease !important;
-        }
-        .editor-content .ProseMirror img:active {
-          cursor: grabbing !important;
-        }
-        .editor-content .ProseMirror img.ProseMirror-selectednode {
-          border: 2px solid #3b82f6 !important;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-        }
-        .editor-content .ProseMirror img:hover {
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-          transform: scale(1.02) !important;
-          transition: all 0.3s ease !important;
-        }
-        .editor-content .ProseMirror img[src=""], .editor-content .ProseMirror img:not([src]) {
-          display: inline-block !important;
-          width: 24px !important;
-          height: 24px !important;
-          background: #f3f4f6 !important;
-          border: 2px dashed #d1d5db !important;
-          border-radius: 4px !important;
-          position: relative !important;
-        }
-        .editor-content .ProseMirror img[src=""]:before, .editor-content .ProseMirror img:not([src]):before {
-          content: "🖼️" !important;
-          position: absolute !important;
-          top: 50% !important;
-          left: 50% !important;
-          transform: translate(-50%, -50%) !important;
-          font-size: 12px !important;
         }
         /* Add red margin line like a real notebook */
         .document-paper::before {
@@ -512,99 +488,40 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
                     <path d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" />
                   </svg>
                 </button>
-
                 <button
                   onClick={() => {
-                    const url = prompt("Enter URL");
-                    if (url) {
-                      // Check if there's a selection
-                      const { from, to } = editor.state.selection;
-                      const hasSelection = from !== to;
-
-                      if (hasSelection) {
-                        // If text is selected, make it a link
-                        editor.chain().focus().setLink({ href: url }).run();
-                      } else {
-                        // If no text is selected, insert the URL as both text and link
-                        editor
-                          .chain()
-                          .focus()
-                          .insertContent(`<a href="${url}">${url}</a>`)
-                          .run();
-                      }
-                    }
-                  }}
-                  className={`
-                    group relative flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300
-                    ${
-                      editor.isActive("link")
-                        ? "bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30 scale-95"
-                        : "hover:bg-white hover:shadow-md text-slate-600 hover:text-slate-800 hover:scale-105"
-                    }
-                  `}
-                  title="Add Link (Ctrl+K)"
-                >
-                  <svg
-                    className="w-4 h-4 transition-transform group-hover:scale-110"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-
-                <button
-                  onClick={() => {
-                    const url = prompt(
-                      "Enter image URL:\n\nExamples:\n• https://picsum.photos/400/300\n• https://via.placeholder.com/500x300\n• https://example.com/image.jpg"
+                    const url = prompt("Enter image URL");
+                    const align = prompt(
+                      "Enter alignment (left, center, right)",
+                      "center"
                     );
-                    if (url && url.trim()) {
-                      const trimmedUrl = url.trim();
-                      // No validation - just insert the image
+                    if (url) {
                       editor
                         .chain()
                         .focus()
-                        .setImage({
-                          src: trimmedUrl,
-                          alt: "Inserted image",
-                          title: "Inserted image",
-                        })
+                        .setImage({ src: url, align } as any)
                         .run();
                     }
                   }}
-                  className={`
-                    group relative flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300
-                    ${
-                      editor.isActive("image")
-                        ? "bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30 scale-95"
-                        : "hover:bg-white hover:shadow-md text-slate-600 hover:text-slate-800 hover:scale-105"
-                    }
-                  `}
-                  title="Insert Image"
+                  className="group relative flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-300
+    hover:bg-white hover:shadow-md text-slate-600 hover:text-slate-800 hover:scale-105"
+                  title="Insert Image with Alignment"
                 >
                   <svg
-                    className="w-4 h-4 transition-transform group-hover:scale-110"
+                    className="w-4 h-4"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                      clipRule="evenodd"
-                    />
+                    <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm0 2h12v10H4V5zm3 3l2 2 3-3 4 4H4l3-3z" />
                   </svg>
                 </button>
-                 <input
-                    type="color"
-                    onChange={e => {
-                    const color = e.target.value
-                    editor?.chain().focus().setColor(color).run()
-                    }}
-                    title="Text Color"
+                <input
+                  type="color"
+                  onChange={(e) => {
+                    const color = e.target.value;
+                    editor?.chain().focus().setColor(color).run();
+                  }}
+                  title="Text Color"
                 />
               </div>
             </div>
