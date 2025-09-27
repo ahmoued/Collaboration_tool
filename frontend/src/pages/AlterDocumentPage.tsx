@@ -15,6 +15,9 @@ import {
   Eye,
   Edit3,
   MoreVertical,
+  Globe,
+  Lock,
+  User,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -34,6 +37,7 @@ interface Document {
   created_at: string;
   updated_at: string;
 }
+
 interface User {
   id: number;
   username: string;
@@ -58,8 +62,8 @@ const AlterDocumentPage = () => {
   useEffect(() => {
     const loadDocument = async () => {
       if (!id) return;
-            console.log("Editor content updated:", editorContent);
- 
+      console.log("Editor content updated:", editorContent);
+
       try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -74,27 +78,13 @@ const AlterDocumentPage = () => {
         });
         setUser(theuser.data);
 
-        // In AlterDocumentPage.tsx, replace the existing axios call with this:
-const response = await axios.get(`http://localhost:4000/docs/${id}`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
+        const response = await axios.get(`http://localhost:4000/docs/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-// Add these detailed logs:
-console.log("=== FRONTEND REQUEST DEBUG ===");
-console.log("Full response object:", response);
-console.log("Response status:", response.status);
-console.log("Response headers:", response.headers);
-console.log("Response data:", response.data);
-console.log("Response data keys:", Object.keys(response.data));
-console.log("Content field exists:", 'content' in response.data);
-console.log("Content field value:", response.data.content);
-console.log("Content field type:", typeof response.data.content);
-console.log("=== END DEBUG ===");
-console.log('eeeeeeeeeeeeeee', response.data)
-
-setDocument(response.data);
+        setDocument(response.data);
         setTitle(response.data.title);
       } catch (err: any) {
         if (err.response?.status === 401) {
@@ -190,31 +180,54 @@ setDocument(response.data);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center">
-        <div className="flex items-center space-x-2 text-muted-foreground">
-          <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-          <span>Loading document...</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-200 via-purple-100 to-slate-200 flex items-center justify-center relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center space-y-6 bg-white/80 backdrop-blur-xl rounded-2xl p-12 shadow-2xl border border-slate-300/50">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-purple-300/30 rounded-full animate-pulse"></div>
+            <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-pink-400 rounded-full animate-spin animate-reverse delay-150" />
+          </div>
+          <div className="text-center space-y-2">
+            <h3 className="text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Loading document...
+            </h3>
+            <p className="text-slate-600">
+              Please wait while we prepare your workspace
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-200 via-purple-100 to-slate-200 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-cyan-300/20 to-blue-300/20 rounded-full blur-2xl animate-pulse delay-500" />
+      </div>
+      {/* Modern Header */}
+      <header className="sticky top-0 z-50 border-b border-slate-300/50 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/80 shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Left: Back button */}
+            {/* Left: Navigation */}
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/dashboard")}
-                className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
+                className="flex items-center space-x-2 text-slate-600 hover:text-slate-800 hover:bg-purple-200/30 transition-all duration-300 rounded-xl group border border-transparent hover:border-purple-400/30"
               >
-                <ArrowLeft className="h-4 w-4" />
-                <span>Dashboard</span>
+                <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+                <span className="font-medium">Dashboard</span>
               </Button>
             </div>
 
@@ -226,20 +239,22 @@ setDocument(response.data);
                   onChange={(e) => setTitle(e.target.value)}
                   onBlur={handleTitleSave}
                   onKeyDown={handleTitleKeyPress}
-                  className="text-center text-lg font-semibold border-2 border-primary/50 focus:border-primary"
+                  className="text-center text-lg font-semibold border-2 border-purple-300/50 focus:border-purple-400 bg-white/80 backdrop-blur-sm text-slate-800 placeholder:text-slate-500 rounded-xl shadow-lg focus:shadow-xl transition-all duration-300 focus:ring-4 focus:ring-purple-500/20"
                   autoFocus
                   placeholder="Enter document title..."
                 />
               ) : (
                 <div
                   onClick={handleTitleEdit}
-                  className="flex items-center justify-center space-x-2 group cursor-pointer py-2 px-4 rounded-lg hover:bg-accent/50 transition-colors"
+                  className="flex items-center justify-center space-x-3 group cursor-pointer py-3 px-6 rounded-xl hover:bg-gradient-to-r hover:from-purple-200/30 hover:to-pink-200/30 transition-all duration-300 hover:shadow-lg hover:scale-105 backdrop-blur-sm border border-transparent hover:border-purple-400/30"
                 >
-                  <FileText className="h-5 w-5 text-primary" />
-                  <h1 className="text-lg font-semibold text-foreground truncate max-w-md">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg">
+                    <FileText className="h-4 w-4" />
+                  </div>
+                  <h1 className="text-lg font-bold bg-gradient-to-r from-slate-700 to-slate-900 bg-clip-text text-transparent truncate max-w-md">
                     {title || "Untitled Document"}
                   </h1>
-                  <Edit3 className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Edit3 className="h-4 w-4 text-purple-400 opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:scale-110" />
                 </div>
               )}
             </div>
@@ -248,7 +263,8 @@ setDocument(response.data);
             <div className="flex items-center space-x-3">
               {/* Save status */}
               {lastSaved && (
-                <div className="hidden sm:flex items-center space-x-1 text-xs text-muted-foreground">
+                <div className="hidden lg:flex items-center space-x-2 text-xs bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-full border border-emerald-500/30 shadow-sm">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                   <Clock className="h-3 w-3" />
                   <span>Saved at {formatLastSaved(lastSaved)}</span>
                 </div>
@@ -260,17 +276,17 @@ setDocument(response.data);
                   variant="outline"
                   size="sm"
                   onClick={handleShare}
-                  className="hidden sm:flex items-center space-x-2"
+                  className="hidden sm:flex items-center space-x-2 bg-white/80 backdrop-blur-sm border-purple-300/50 hover:bg-purple-200/30 hover:border-purple-400 text-purple-600 hover:text-purple-700 transition-all duration-300 hover:shadow-lg hover:scale-105 rounded-xl"
                 >
                   <Share className="h-4 w-4" />
-                  <span>Share</span>
+                  <span className="font-medium">Share</span>
                 </Button>
 
                 <Button
                   onClick={handleSave}
                   disabled={isSaving}
                   size="sm"
-                  className="flex items-center space-x-2"
+                  className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-xl font-medium disabled:opacity-50 disabled:scale-100"
                 >
                   {isSaving ? (
                     <>
@@ -288,11 +304,18 @@ setDocument(response.data);
                 {/* More options dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="h-4 w-4" />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 p-0 hover:bg-purple-200/30 rounded-xl transition-all duration-300 hover:scale-110"
+                    >
+                      <MoreVertical className="h-4 w-4 text-purple-400" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-48 bg-white/90 backdrop-blur-xl border-slate-300/50 shadow-xl"
+                  >
                     <DropdownMenuItem
                       onClick={handleShare}
                       className="sm:hidden"
@@ -319,25 +342,38 @@ setDocument(response.data);
             </div>
           </div>
 
-          {/* Status bar */}
-          <div className="hidden sm:flex items-center justify-between py-2 text-xs text-muted-foreground border-t border-border/40">
+          {/* Modern Status bar */}
+          <div className="hidden md:flex items-center justify-between py-3 text-xs border-t border-slate-300/30 bg-gradient-to-r from-purple-100/50 to-pink-100/50">
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="text-xs">
-                <Users className="h-3 w-3 mr-1" />
-                Solo editing
+              <Badge className="flex items-center space-x-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-sm hover:shadow-md transition-all duration-300 rounded-full px-3 py-1">
+                <Lock className="h-3 w-3" />
+                <span className="font-medium">Private Document</span>
               </Badge>
+              <Badge className="flex items-center space-x-1.5 bg-white/80 text-slate-600 border border-slate-400/50 shadow-sm hover:shadow-md transition-all duration-300 rounded-full px-3 py-1">
+                <User className="h-3 w-3" />
+                <span className="font-medium">Solo editing</span>
+              </Badge>
+              <div className="flex items-center space-x-2 text-cyan-400">
+                <div className="w-2 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full animate-pulse" />
+                <span className="font-medium">Live collaboration ready</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 text-slate-600">
               {document && (
                 <>
-                  <span>
-                    Created {new Date(document.created_at).toLocaleDateString()}
-                  </span>
-                  <span>•</span>
-                  <span>
-                    Modified{" "}
-                    {new Date(document.updated_at).toLocaleDateString()}
-                  </span>
+                  <div className="flex items-center space-x-1">
+                    <span className="font-medium">Created</span>
+                    <span className="text-purple-400 font-semibold">
+                      {new Date(document.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <span className="text-purple-300">•</span>
+                  <div className="flex items-center space-x-1">
+                    <span className="font-medium">Modified</span>
+                    <span className="text-pink-400 font-semibold">
+                      {new Date(document.updated_at).toLocaleDateString()}
+                    </span>
+                  </div>
                 </>
               )}
             </div>
@@ -346,28 +382,45 @@ setDocument(response.data);
       </header>
 
       {/* Main content area */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Document container */}
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-border/50 min-h-[800px] relative overflow-hidden">
-          {/* Paper effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-slate-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/50" />
+      <main className="max-w-6xl mx-auto px-6 lg:px-8 py-8 relative z-10">
+        {/* Modern Document container */}
+        <div className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl border border-slate-300/40 min-h-[800px] relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+          {/* Enhanced paper effect with subtle patterns */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white/90 to-slate-100/80" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(147,51,234,0.1)_1px,transparent_0)] bg-[length:20px_20px] opacity-30" />
 
-          {/* Content area */}
-          <div className="relative">
-            {/* Page margins visual effect */}
-            <div className="absolute left-16 top-0 bottom-0 w-px bg-red-200 dark:bg-red-900/30" />
+          {/* Subtle animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-3000 ease-in-out" />
+
+          {/* Content area with improved margins */}
+          <div className="relative z-10">
+            {/* Enhanced margin indicators */}
+            <div className="absolute left-20 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-red-300/60 to-transparent" />
+            <div className="absolute left-18 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-red-200/40 to-transparent" />
+
+            {/* Top margin line */}
             <div
-              className="absolute left-0 top-0 right-0 h-px bg-border/20"
-              style={{ top: "60px" }}
+              className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400/30 to-transparent"
+              style={{ top: "80px" }}
             />
 
-            {/* Editor container */}
+            {/* Notebook holes effect */}
+            <div className="absolute left-4 top-16 space-y-8">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-3 h-3 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-inner border border-slate-400/50"
+                />
+              ))}
+            </div>
+
+            {/* Editor container with improved spacing */}
             <div
               id="editor-container"
-              className="min-h-[750px] p-16 focus-within:outline-none"
+              className="min-h-[750px] p-20 focus-within:outline-none"
               style={{
-                paddingLeft: "80px",
-                lineHeight: "1.6",
+                paddingLeft: "100px",
+                lineHeight: "1.7",
                 fontSize: "16px",
               }}
             >
@@ -376,21 +429,40 @@ setDocument(response.data);
                 <CollabEditor
                   docId={id}
                   userName={user.username}
-                  initialContent={document.content || "<p>aaaaaaaaaaaa</p>"}
+                  initialContent={
+                    document?.content || "<p>Start writing your document...</p>"
+                  }
                   onUpdateContent={setEditorContent}
                 />
               ) : (
                 <div className="prose prose-lg dark:prose-invert max-w-none">
-                  <div className="text-muted-foreground/60 italic">
-                    <div className="flex items-center justify-center py-20 text-center">
-                      <div className="space-y-4">
-                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                          <Edit3 className="h-8 w-8 text-primary/60" />
+                  <div className="text-center py-20">
+                    <div className="space-y-6">
+                      <div className="relative">
+                        <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto shadow-lg border border-purple-500/50">
+                          <Edit3 className="h-10 w-10 text-white" />
                         </div>
-                        <p className="text-lg font-medium">Loading Editor...</p>
-                        <p className="text-sm text-muted-foreground max-w-md">
-                          Preparing collaborative rich text editing
+                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse shadow-lg" />
+                      </div>
+                      <div className="text-center space-y-2">
+                        <p className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                          Loading Editor...
                         </p>
+                        <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                          Preparing your beautiful collaborative workspace with
+                          real-time editing capabilities
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce"></div>
+                        <div
+                          className="w-2 h-2 bg-pink-500 rounded-full animate-bounce"
+                          style={{ animationDelay: "0.1s" }}
+                        ></div>
+                        <div
+                          className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                          style={{ animationDelay: "0.2s" }}
+                        ></div>
                       </div>
                     </div>
                   </div>
@@ -400,16 +472,44 @@ setDocument(response.data);
           </div>
 
           {/* Bottom gradient fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-background/10 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-slate-800/30 to-transparent pointer-events-none"></div>
         </div>
 
-        {/* Footer info */}
-        <div className="mt-6 flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center space-x-4">
-            <span>Document ID: {document?.id}</span>
+        {/* Enhanced Footer info */}
+        <div className="mt-8 p-6 bg-white/70 backdrop-blur-xl rounded-2xl border border-slate-300/30 shadow-lg">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2 text-purple-400">
+                <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" />
+                <span className="font-medium">Document ID:</span>
+                <code className="px-2 py-1 bg-purple-100/80 rounded-md text-xs font-mono text-purple-700 border border-purple-300/50">
+                  {document?.id}
+                </code>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 text-emerald-400">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              <span className="font-medium">
+                Ready for collaborative editing
+              </span>
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <span>Ready for collaborative editing</span>
+
+          {/* Additional status indicators */}
+          <div className="mt-4 pt-4 border-t border-purple-800/30 flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center space-x-4">
+              <span className="flex items-center space-x-1">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                <span>Autosave enabled</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                <span>Real-time sync</span>
+              </span>
+            </div>
+            <div className="text-xs text-slate-500 font-medium">
+              Enhanced collaborative workspace v2.0
+            </div>
           </div>
         </div>
       </main>

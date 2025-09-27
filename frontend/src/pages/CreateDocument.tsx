@@ -49,8 +49,17 @@ const NewDocumentPage = () => {
 
       // Only include content if it's not empty
       if (content.trim()) {
-        payload.content = { text: content.trim() };
+        payload.content = {
+          type: "doc",
+          content: [
+            {
+            type: "paragraph",
+            content: [{ type: "text", text: content.trim() }],
+            },
+          ],
+        };
       }
+      console.log('content format set')
 
       const response = await axios.post("http://localhost:4000/docs", payload, {
         headers: {
@@ -58,6 +67,7 @@ const NewDocumentPage = () => {
           "Content-Type": "application/json",
         },
       });
+      console.log('backend request sent')
 
       toast({
         title: "Document created!",
@@ -65,7 +75,7 @@ const NewDocumentPage = () => {
       });
 
       // Navigate to the created document
-      navigate(`/docs/${response.data.id}`);
+      navigate(`/doc/${response.data.id}`);
     } catch (err: any) {
       if (err.response?.status === 401) {
         localStorage.removeItem("token");
@@ -74,7 +84,7 @@ const NewDocumentPage = () => {
       }
 
       toast({
-        title: "Error creating document",
+        title: "Error creating document my bro",
         description: err.response?.data?.error || err.message,
         variant: "destructive",
       });
@@ -84,23 +94,23 @@ const NewDocumentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-200 via-purple-100 to-slate-200">
       {/* Header */}
-      <header className="border-b border-border">
+      <header className="border-b border-slate-300/50 bg-white/80 backdrop-blur-xl shadow-lg">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate("/dashboard")}
-              className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
+              className="flex items-center space-x-2 text-slate-600 hover:text-slate-800 hover:bg-purple-200/30 transition-all duration-300 rounded-xl px-3 py-2"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Dashboard</span>
             </Button>
             <div className="flex items-center space-x-3">
-              <FileText className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-semibold text-foreground">
+              <FileText className="h-6 w-6 text-purple-600" />
+              <h1 className="text-xl font-semibold text-slate-800">
                 Create New Document
               </h1>
             </div>
@@ -111,10 +121,12 @@ const NewDocumentPage = () => {
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Card className="shadow-lg">
+        <Card className="shadow-2xl shadow-purple-500/10 bg-white/90 backdrop-blur-sm border border-slate-300/40">
           <CardHeader>
-            <CardTitle className="text-2xl text-center">New Document</CardTitle>
-            <CardDescription className="text-center">
+            <CardTitle className="text-2xl font-semibold text-center text-slate-800">
+              New Document
+            </CardTitle>
+            <CardDescription className="text-center text-slate-600">
               Create a new document to start collaborating
             </CardDescription>
           </CardHeader>
@@ -122,7 +134,10 @@ const NewDocumentPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Document Title - Required */}
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-sm font-medium">
+                <Label
+                  htmlFor="title"
+                  className="text-sm font-medium text-slate-700"
+                >
                   Document Title *
                 </Label>
                 <Input
@@ -131,7 +146,7 @@ const NewDocumentPage = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter document title..."
-                  className="h-11"
+                  className="h-11 border-slate-300/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-colors bg-white/80"
                   required
                   disabled={isCreating}
                 />
@@ -139,7 +154,10 @@ const NewDocumentPage = () => {
 
               {/* Document Content - Optional */}
               <div className="space-y-2">
-                <Label htmlFor="content" className="text-sm font-medium">
+                <Label
+                  htmlFor="content"
+                  className="text-sm font-medium text-slate-700"
+                >
                   Content (Optional)
                 </Label>
                 <Textarea
@@ -147,7 +165,7 @@ const NewDocumentPage = () => {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Enter initial document content..."
-                  className="min-h-[100px] resize-none"
+                  className="min-h-[100px] resize-none border-slate-300/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-colors bg-white/80"
                   disabled={isCreating}
                 />
               </div>
@@ -157,7 +175,7 @@ const NewDocumentPage = () => {
                 <Button
                   type="submit"
                   disabled={isCreating || !title.trim()}
-                  className="w-full h-12 text-base font-medium"
+                  className="w-full h-12 text-base font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   {isCreating ? (
                     <>

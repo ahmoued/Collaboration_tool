@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import CreateDocument from "./pages/CreateDocument";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-document" element={<CreateDocument />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/doc/:id" element={<AlterDocumentPage />} />
           <Route path="/document/:documentId" element={<DocumentEditor />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

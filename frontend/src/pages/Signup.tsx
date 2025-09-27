@@ -112,22 +112,22 @@ const Signup = () => {
   const strength = passwordStrength(password);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-200 via-purple-100 to-slate-200 flex items-center justify-center p-4">
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-32 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-40 -right-32 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-32 w-96 h-96 bg-pink-300/20 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative w-full max-w-4xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
         {/* Left Side - Signup Form */}
         <div className="w-full max-w-md mx-auto lg:mx-0 order-2 lg:order-1">
-          <Card className="border-0 shadow-2xl shadow-purple-500/10">
+          <Card className="border-0 shadow-2xl shadow-purple-500/10 bg-white/90 backdrop-blur-sm">
             <CardHeader className="space-y-2 text-center">
-              <CardTitle className="text-2xl font-bold">
+              <CardTitle className="text-2xl font-semibold text-slate-800">
                 Create your account
               </CardTitle>
-              <CardDescription className="text-base">
+              <CardDescription className="text-base text-slate-600">
                 Join thousands of users collaborating on FlowScribe
               </CardDescription>
             </CardHeader>
@@ -135,11 +135,14 @@ const Signup = () => {
             <CardContent className="space-y-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="username" className="text-sm font-medium">
+                  <Label
+                    htmlFor="username"
+                    className="text-sm font-medium text-slate-700"
+                  >
                     Username
                   </Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
                     <Input
                       id="username"
                       type="text"
@@ -153,11 +156,14 @@ const Signup = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-medium text-slate-700"
+                  >
                     Email
                   </Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
                     <Input
                       id="email"
                       type="email"
@@ -171,18 +177,21 @@ const Signup = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-medium">
+                  <Label
+                    htmlFor="password"
+                    className="text-sm font-medium text-slate-700"
+                  >
                     Password
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Create a strong password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10 pr-10 h-12 border-border/50 focus:border-primary transition-colors"
+                      className="pl-10 pr-10 h-12 border-slate-300/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-colors bg-white/80"
                       required
                     />
                     <button
@@ -200,7 +209,7 @@ const Signup = () => {
                   {password && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs">
-                        <span className="text-muted-foreground">
+                        <span className="text-slate-600">
                           Password strength:
                         </span>
                         <span
@@ -215,7 +224,7 @@ const Signup = () => {
                           {getStrengthText(strength)}
                         </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                      <div className="w-full bg-slate-200 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all ${getStrengthColor(
                             strength
@@ -230,19 +239,19 @@ const Signup = () => {
                 <div className="space-y-2">
                   <Label
                     htmlFor="confirmPassword"
-                    className="text-sm font-medium"
+                    className="text-sm font-medium text-slate-700"
                   >
                     Confirm Password
                   </Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-500" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm your password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="pl-10 pr-10 h-12 border-border/50 focus:border-primary transition-colors"
+                      className="pl-10 pr-10 h-12 border-slate-300/50 focus:border-purple-400 focus:ring-2 focus:ring-purple-500/20 transition-colors bg-white/80"
                       required
                     />
                     <button
@@ -250,7 +259,7 @@ const Signup = () => {
                       onClick={() =>
                         setShowConfirmPassword(!showConfirmPassword)
                       }
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-700 transition-colors"
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="w-4 h-4" />
@@ -272,11 +281,11 @@ const Signup = () => {
                     id="terms"
                     checked={acceptTerms}
                     onChange={(e) => setAcceptTerms(e.target.checked)}
-                    className="rounded border-border/50 mt-1"
+                    className="rounded border-slate-300/50 mt-1"
                   />
                   <label
                     htmlFor="terms"
-                    className="text-sm text-muted-foreground leading-relaxed"
+                    className="text-sm text-slate-600 leading-relaxed"
                   >
                     I agree to the{" "}
                     <Link
@@ -288,7 +297,7 @@ const Signup = () => {
                     and{" "}
                     <Link
                       to="/privacy"
-                      className="text-primary hover:text-primary-hover transition-colors"
+                      className="text-purple-600 hover:text-purple-700 transition-colors"
                     >
                       Privacy Policy
                     </Link>
@@ -297,7 +306,7 @@ const Signup = () => {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-primary to-purple-600 hover:from-primary-hover hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -316,11 +325,11 @@ const Signup = () => {
             </CardContent>
 
             <CardFooter className="flex-col space-y-4 text-center">
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-slate-600">
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-primary hover:text-primary-hover transition-colors font-medium"
+                  className="text-purple-600 hover:text-purple-700 transition-colors font-medium"
                 >
                   Sign in
                 </Link>
@@ -333,61 +342,61 @@ const Signup = () => {
         <div className="hidden lg:block space-y-8 order-1 lg:order-2">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-primary to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                 <FileText className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 FlowScribe
               </h1>
             </div>
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <p className="text-xl text-slate-600 leading-relaxed">
               Start collaborating in minutes, not hours
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-green-200/50 rounded-lg flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="w-6 h-6 text-green-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">Free to start</h3>
-                <p className="text-muted-foreground">
+                <h3 className="font-medium text-slate-800">Free to start</h3>
+                <p className="text-slate-600">
                   Begin with our generous free plan, upgrade when you grow
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-blue-200/50 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Sparkles className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">Instant setup</h3>
-                <p className="text-muted-foreground">
+                <h3 className="font-medium text-slate-800">Instant setup</h3>
+                <p className="text-slate-600">
                   No complex configuration - start writing immediately
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-purple-200/50 rounded-lg flex items-center justify-center flex-shrink-0">
                 <FileText className="w-6 h-6 text-purple-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">Rich editor</h3>
-                <p className="text-muted-foreground">
+                <h3 className="font-medium text-slate-800">Rich editor</h3>
+                <p className="text-slate-600">
                   Beautiful, distraction-free writing experience
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="bg-muted/50 rounded-xl p-6 space-y-3">
-            <h3 className="font-semibold text-foreground">
+          <div className="bg-white/60 backdrop-blur-sm border border-slate-300/40 rounded-xl p-6 space-y-3">
+            <h3 className="font-medium text-slate-800">
               What you get for free:
             </h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
+            <ul className="space-y-2 text-sm text-slate-600">
               <li className="flex items-center space-x-2">
                 <CheckCircle2 className="w-4 h-4 text-green-600" />
                 <span>Up to 5 documents</span>
