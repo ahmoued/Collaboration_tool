@@ -159,7 +159,7 @@ const Index = () => {
               </a>
 
               <a
-                href="/document/1"
+                href="/contact"
                 className="group relative bg-white/80 backdrop-blur-sm border border-slate-300/50 hover:border-purple-400/50 text-slate-700 hover:text-purple-700 px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <div className="flex items-center space-x-3">
@@ -176,7 +176,7 @@ const Index = () => {
                       d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6 4h6m2-10V7a2 2 0 00-2-2H9a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V11z"
                     />
                   </svg>
-                  <span>Try Live Demo</span>
+                  <span>Contact Us</span>
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 </div>
               </a>
