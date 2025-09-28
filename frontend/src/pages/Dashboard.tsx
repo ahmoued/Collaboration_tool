@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Document } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import {
@@ -31,6 +30,14 @@ type User = {
   username: string;
   email: string;
 };
+interface Document {
+  id: string;
+  title: string;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
 
 const Dashboard = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -86,7 +93,6 @@ const Dashboard = () => {
 
   const createDocument = async () => {
 
-    // Mock document creation
     try{
     const token = await localStorage.getItem("token")
     if (!token) navigate("/login")

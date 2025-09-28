@@ -84,13 +84,65 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
           provider,
           user: { name: userName, color: userColor },
           render: (user: any) => {
+            // Create cursor container
+            const cursorContainer = document.createElement("div");
+            cursorContainer.classList.add("collaboration-cursor");
+            cursorContainer.setAttribute(
+              "style",
+              "position: relative; display: inline-block;"
+            );
+
+            // Create the cursor caret (keep as clean '|' line)
             const cursor = document.createElement("span");
             cursor.classList.add("collaboration-cursor__caret");
-            cursor.setAttribute("style", `border-color: ${user.color}`);
-            return cursor;
+            cursor.setAttribute(
+              "style",
+              `
+              border-left: 2px solid ${user.color};
+              height: 1.2em;
+              position: absolute;
+              top: 0;
+              left: 0;
+              pointer-events: none;
+            `
+            );
+
+            // Create the username label
+            const userLabel = document.createElement("div");
+            userLabel.classList.add("collaboration-cursor__label");
+            userLabel.textContent = user.name;
+            userLabel.setAttribute(
+              "style",
+              `
+              position: absolute;
+              top: 100%;
+              left: -2px;
+              background: ${user.color};
+              color: white;
+              font-size: 11px;
+              font-weight: 500;
+              padding: 2px 6px;
+              border-radius: 4px;
+              white-space: nowrap;
+              z-index: 1000;
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+              transform: translateY(2px);
+              pointer-events: none;
+            `
+            );
+
+            // Add both cursor and label to container
+            cursorContainer.appendChild(cursor);
+            cursorContainer.appendChild(userLabel);
+
+            return cursorContainer;
           },
           onUpdate: (users: any[]) => {
-            // Handle cursor updates if needed
+            console.log(
+              "Active users with cursors:",
+              users.map((u) => u.name)
+            );
           },
         } as any),
       ],
@@ -163,6 +215,41 @@ const CollabEditor: React.FC<CollabEditorProps> = ({
   return (
     <div className="w-full space-y-6">
       <style>{`
+        /* Enhanced cursor styles */
+        .collaboration-cursor__caret {
+          border-left: 2px solid !important;
+          height: 1.2em !important;
+          position: absolute !important;
+          animation: cursor-blink 1s infinite;
+          background: transparent !important;
+          width: 0 !important;
+        }
+        
+        .collaboration-cursor__label {
+          animation: label-fade-in 0.3s ease-out;
+        }
+        
+        @keyframes cursor-blink {
+          0%, 50% { opacity: 1; }
+          51%, 100% { opacity: 0.3; }
+        }
+        
+        @keyframes label-fade-in {
+          from { 
+            opacity: 0; 
+            transform: translateY(-2px) scale(0.8); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateY(2px) scale(1); 
+          }
+        }
+        
+        .collaboration-cursor:hover .collaboration-cursor__label {
+          transform: translateY(2px) scale(1.05);
+          transition: transform 0.2s ease;
+        }
+
         .editor-content .ProseMirror h1 {
           font-size: 2.5rem !important;
           font-weight: 800 !important;

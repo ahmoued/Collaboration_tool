@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import DocumentEditor from "./pages/DocumentEditor";
 import AlterDocumentPage from "./pages/AlterDocumentPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -29,8 +28,6 @@ const App = () => (
           <Route path="/create-document" element={<CreateDocument />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/doc/:id" element={<AlterDocumentPage />} />
-          <Route path="/document/:documentId" element={<DocumentEditor />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
