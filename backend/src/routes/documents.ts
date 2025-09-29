@@ -44,7 +44,7 @@ router.get("/:id", authenticate, async (req: AuthRequest, res) => {
       return res.status(403).json({ error: "No access" });
 
     res.json(result.rows[0]);
-    console.log("backend document: ", result.rows[0])
+    console.log("backend document: ", result.rows[0]);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
@@ -153,5 +153,94 @@ router.post("/:id/share", authenticate, async (req: AuthRequest, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+/**
+ * GET /documents/:id/collaborators
+ * Get all collaborators for a document
+ */
+router.get(
+  "/:id/collaborators",
+  authenticate,
+  async (req: AuthRequest, res) => {
+    const userId = req.user.id;
+    const docId = req.params.id;
+
+    try {
+      // Check if user has access to this document
+      const access = await pool.query(
+        "SELECT * FROM documents WHERE id=$1 AND (owner_id=$2 OR id IN (SELECT doc_id FROM document_users WHERE user_id=$2))",
+        [docId, userId]
+      );
+
+      if (!access.rows.length) {
+        return res.status(403).json({ error: "No access to this document" });
+      }
+
+      // Get owner and collaborators
+      const result = await pool.query(
+        `SELECT 
+        u.id, u.username, u.email,
+        CASE WHEN d.owner_id = u.id THEN 'owner' ELSE du.role END AS role,
+        CASE WHEN d.owner_id = u.id THEN true ELSE false END AS is_owner
+       FROM documents d
+       JOIN users u ON (u.id = d.owner_id OR u.id IN (SELECT user_id FROM document_users WHERE doc_id = d.id))
+       LEFT JOIN document_users du ON du.user_id = u.id AND du.doc_id = d.id
+       WHERE d.id = $1
+       ORDER BY is_owner DESC, u.username ASC`,
+        [docId]
+      );
+
+      res.json(result.rows);
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+/**
+ * DELETE /documents/:id/collaborators/:userId
+ * Remove a collaborator from a document (owner only)
+ */
+router.delete(
+  "/:id/collaborators/:userId",
+  authenticate,
+  async (req: AuthRequest, res) => {
+    const requesterId = req.user.id;
+    const docId = req.params.id;
+    const targetUserId = req.params.userId;
+
+    try {
+      // Only owner can remove collaborators
+      const owner = await pool.query(
+        "SELECT owner_id FROM documents WHERE id=$1",
+        [docId]
+      );
+
+      if (!owner.rows.length || owner.rows[0].owner_id !== requesterId) {
+        return res
+          .status(403)
+          .json({ error: "Only document owner can remove collaborators" });
+      }
+
+      // Cannot remove the owner
+      if (targetUserId && parseInt(targetUserId) === owner.rows[0].owner_id) {
+        return res.status(400).json({ error: "Cannot remove document owner" });
+      }
+
+      const result = await pool.query(
+        "DELETE FROM document_users WHERE user_id=$1 AND doc_id=$2 RETURNING *",
+        [targetUserId, docId]
+      );
+
+      if (!result.rows.length) {
+        return res.status(404).json({ error: "Collaborator not found" });
+      }
+
+      res.json({ message: "Collaborator removed successfully" });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
 
 export default router;

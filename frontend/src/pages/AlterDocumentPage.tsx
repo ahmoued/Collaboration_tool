@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import CollabEditor from "@/components/CollabEditor";
+import CollaborationManager from "@/components/CollaborationManager";
 import { useToast } from "@/hooks/use-toast";
 import { JSONContent } from "@tiptap/react";
 import {
@@ -513,6 +514,13 @@ const AlterDocumentPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Collaboration Manager */}
+      <CollaborationManager
+        documentId={id!}
+        currentUserId={user?.id || 0}
+        isOwner={user?.id === document?.owner_id}
+      />
     </div>
   );
 };
