@@ -23,7 +23,7 @@ jobs:
       - name: install frontend dependencies
         run: |
           cd frontend
-          npm install
+          npm install --legacy-peer-deps
 
       - name: login to ghcr
         run: echo ${{secrets.GHCR_PAT}} | docker login ghcr.io -u ahmoued --password-stdin
