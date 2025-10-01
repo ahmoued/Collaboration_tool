@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+
+
 const pool = new Pool({
   host: process.env.DATABASE_HOST || "localhost",
   port: Number(process.env.DATABASE_PORT) || 5432,
