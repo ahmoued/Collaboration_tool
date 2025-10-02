@@ -4,6 +4,7 @@
     // File Layout
     // "rootDir": "./src",
     // "outDir": "./dist",
+    "esModuleInterop": true,
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -11,7 +12,7 @@
     "outDir": "./dist",
     "module": "NodeNext",
     "target": "esnext",
-    "types": [],
+    "types": ["node", "jest"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
