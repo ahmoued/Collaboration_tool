@@ -28,6 +28,38 @@ jobs:
       - name: get the code
         uses: actions/checkout@v3
 
+      - name: set up db schema
+      run: |
+        PGPASSWORD=azertyuiop psql -h localhost -U postgres -d collabdb -c "
+            CREATE TABLE IF NOT EXISTS users (
+              id SERIAL PRIMARY KEY,
+              username VARCHAR(100) NOT NULL UNIQUE,
+              email VARCHAR(255) NOT NULL UNIQUE,
+              password TEXT NOT NULL,
+              created_at TIMESTAMP DEFAULT now()
+            );
+
+            CREATE TABLE IF NOT EXISTS documents (
+              id SERIAL PRIMARY KEY,
+              title TEXT NOT NULL,
+              created_at TIMESTAMP DEFAULT now(),
+              owner_id INTEGER NOT NULL,
+              updated_at TIMESTAMP DEFAULT now(),
+              content JSONB DEFAULT '{}'::jsonb,
+              CONSTRAINT documents_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES users(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS document_users (
+              doc_id INTEGER NOT NULL,
+              user_id INTEGER NOT NULL,
+              role TEXT NOT NULL,
+              PRIMARY KEY (user_id, doc_id),
+              CONSTRAINT document_users_doc_id_fkey FOREIGN KEY (doc_id) REFERENCES documents(id),
+              CONSTRAINT document_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id)
+            );
+          "
+
+
       - name: login to ghcr
         run: echo ${{secrets.GHCR_PAT}} | docker login ghcr.io -u ahmoued --password-stdin
 
