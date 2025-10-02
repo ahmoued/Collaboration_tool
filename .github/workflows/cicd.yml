@@ -6,15 +6,21 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
     
     services:
       postgres:
         image: postgres:17
         ports: ['5432:5432']
         env:
-          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: $secrets.POSTGRES_USER
+          POSTGRES_PASSWORD: $secrets.POSTGRES_PASSWORD 
+          POSTGRES_DB: $secrets.POSTGRES_DB
         options: >-
           --health-cmd "pg_isready -U ${{ secrets.POSTGRES_USER }}"
           --health-interval 10s
@@ -32,7 +38,12 @@ jobs:
         run: |
           docker build --target dev -t ghcr.io/ahmoued/collab-backend:latest ./backend
           docker run --rm \
-          
+          --network host \
+          -e DATABASE_HOST=localhost \
+          -e DATABASE_PORT=5432 \
+          -e DATABASE_USERNAME=${{secrets.POSTGRES_USER}} \
+          -e DATABASE_PASSWORD=${{secrets.POSTGRES_PASSWORD}} \
+          -e DATABASE_NAME=${{secrets.POSTGRES_DB}} \
           ghcr.io/ahmoued/collab-backend:latest npm test
 
       - name: build and push backend production docker image
