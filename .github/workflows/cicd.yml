@@ -7,10 +7,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    env:
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+    
 
     
     services:
@@ -18,11 +15,11 @@ jobs:
         image: postgres:17
         ports: ['5432:5432']
         env:
-          POSTGRES_USER: $POSTGRES_USER
-          POSTGRES_PASSWORD: $POSTGRES_PASSWORD 
-          POSTGRES_DB: $POSTGRES_DB
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: azertyuiop
+          POSTGRES_DB: collabdb
         options: >-
-          --health-cmd "pg_isready -U $POSTGRES_USER"
+          --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -42,7 +39,7 @@ jobs:
           -e DATABASE_HOST=localhost \
           -e DATABASE_PORT=5432 \
           -e DATABASE_USERNAME=${{secrets.POSTGRES_USER}} \
-          -e DATABASE_PASSWORD=${{secrets.POSTGRES_PASSWORD}} \
+          -e DATABASE_PASSWORD=azertyuiop \
           -e DATABASE_NAME=${{secrets.POSTGRES_DB}} \
           ghcr.io/ahmoued/collab-backend:latest npm test
 
