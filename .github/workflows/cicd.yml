@@ -30,16 +30,18 @@ jobs:
 
       - name: build backend dev docker image and run tests
         run: |
-          docker build --target dev-t ghcr.io/ahmoued/collab-backend:latest ./backend
-          docker run --rm
-          --network host
-          -e DATABASE_HOST=localhost
-          -e DATABASE_PORT=5432
-          -e DATABASE_username=${{secrets.POSTGRES_USER}}
-          -e DATABASE_PASSWORD=${{secrets.POSTGRES_PASSWORD}}
-          -e DATABASE_NAME=${{secrets.POSTGRES_DB}}
+          docker build --target dev -t ghcr.io/ahmoued/collab-backend:latest ./backend
+          docker run --rm \
+          --network host \
+          -e DATABASE_HOST=localhost \
+          -e DATABASE_PORT=5432 \
+          -e DATABASE_USERNAME=${{secrets.POSTGRES_USER}} \
+          -e DATABASE_PASSWORD=${{secrets.POSTGRES_PASSWORD}} \
+          -e DATABASE_NAME=${{secrets.POSTGRES_DB}} \
+          ghcr.io/ahmoued/collab-backend:latest npm test
 
-      - name: build push backend production docker image
+      - name: build and push backend production docker image
+        if: github.ref == 'refs/heads/main'
         run: | 
           docker build --target prod -t ghcr.io/ahmoued/collab-backend:latest ./backend
           docker push ghcr.io/ahmoued/collab-backend:latest
