@@ -4,7 +4,8 @@ COPY package*.json ./
 FROM base AS dev
 RUN npm install
 RUN npm install -g tsx
-COPY . . 
+COPY . .
+CMD ["npm", "test"]
 FROM base AS prod
 RUN npm ci --only=production
 COPY . .

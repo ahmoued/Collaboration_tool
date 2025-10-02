@@ -32,12 +32,7 @@ jobs:
         run: |
           docker build --target dev -t ghcr.io/ahmoued/collab-backend:latest ./backend
           docker run --rm \
-          --network host \
-          -e DATABASE_HOST=localhost \
-          -e DATABASE_PORT=5432 \
-          -e DATABASE_USERNAME=${{secrets.POSTGRES_USER}} \
-          -e DATABASE_PASSWORD=${{secrets.POSTGRES_PASSWORD}} \
-          -e DATABASE_NAME=${{secrets.POSTGRES_DB}} \
+          
           ghcr.io/ahmoued/collab-backend:latest npm test
 
       - name: build and push backend production docker image
