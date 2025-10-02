@@ -65,7 +65,6 @@ describe('document api', ()=>{
   });
 })
 
-// Add this to prevent connection issues
 afterAll(async () => {
   try {
     await pool.query('DELETE FROM users WHERE email = $1', ['example@test.com']);

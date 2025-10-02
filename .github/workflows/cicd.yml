@@ -70,9 +70,9 @@ jobs:
           --network host \
           -e DATABASE_HOST=localhost \
           -e DATABASE_PORT=5432 \
-          -e DATABASE_USERNAME=${{secrets.POSTGRES_USER}} \
+          -e DATABASE_USERNAME=postgres \
           -e DATABASE_PASSWORD=azertyuiop \
-          -e DATABASE_NAME=${{secrets.POSTGRES_DB}} \
+          -e DATABASE_NAME=collabdb \
           ghcr.io/ahmoued/collab-backend:latest npm test
 
       - name: build and push backend production docker image
