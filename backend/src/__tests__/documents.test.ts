@@ -64,3 +64,13 @@ describe('document api', ()=>{
     expect(res.body.message).toBe('Document deleted');
   });
 })
+
+// Add this to prevent connection issues
+afterAll(async () => {
+  try {
+    await pool.query('DELETE FROM users WHERE email = $1', ['example@test.com']);
+    await pool.end();
+  } catch (error: any) {
+    console.log('Cleanup error:', error.message);
+  }
+});
