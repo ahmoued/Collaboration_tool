@@ -58,7 +58,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
       const token = localStorage.getItem("token");
       console.log("Fetching collaborators for document:", documentId);
       const response = await axios.get(
-        `http://${process.env.REACT_APP_BACKEND_HOST}:4000/docs/${documentId}/collaborators`,
+        `${import.meta.env.VITE_API_URL}/docs/${documentId}/collaborators`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log("Collaborators response:", response.data);
@@ -83,7 +83,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://${process.env.REACT_APP_BACKEND_HOST}:4000/users/search?username=${encodeURIComponent(
+        `${import.meta.env.VITE_API_URL}/users/search?username=${encodeURIComponent(
           query
         )}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -113,7 +113,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://${process.env.REACT_APP_BACKEND_HOST}:4000/docs/${documentId}/share`,
+        `${import.meta.env.VITE_API_URL}/docs/${documentId}/share`,
         { targetUserId: user.id, role },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -134,7 +134,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://${process.env.REACT_APP_BACKEND_HOST}:4000/documents/${documentId}/collaborators/${userId}`,
+        `${import.meta.env.VITE_API_URL}/documents/${documentId}/collaborators/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
