@@ -39,7 +39,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`http://process.env.REACT_APP_BACKEND_HOST:4000/auth/login`, {
+      const response = await axios.post(`http://${process.env.REACT_APP_BACKEND_HOST}:4000/auth/login`, {
         email,
         password,
       });
