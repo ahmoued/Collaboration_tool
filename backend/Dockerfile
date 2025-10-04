@@ -12,11 +12,11 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm ci --only=production
-
+RUN npm install -g concurrently
 COPY --from=dev /app/dist ./dist
 
 COPY --from=dev /app/package*.json ./
 
 EXPOSE 4000
 EXPOSE 1234
-CMD ["node", "dist/index.js"]
+CMD ["npm", "run", "start:prod:all"]

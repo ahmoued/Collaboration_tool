@@ -72,14 +72,14 @@ const AlterDocumentPage = () => {
           return;
         }
 
-        const theuser = await axios.get("http://process.env.REACT_APP_BACKEND_HOST:4000/users/me", {
+        const theuser = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST}:4000/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         setUser(theuser.data);
 
-        const response = await axios.get(`http://process.env.REACT_APP_BACKEND_HOST:4000/docs/${id}`, {
+        const response = await axios.get(`http://${process.env.REACT_APP_BACKEND_HOST}:4000/docs/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -119,7 +119,7 @@ const AlterDocumentPage = () => {
       }
 
       await axios.put(
-        `http://process.env.REACT_APP_BACKEND_HOST:4000/docs/${document.id}`,
+        `http://${process.env.REACT_APP_BACKEND_HOST}:4000/docs/${document.id}`,
         { title, content: editorContent },
         {
           headers: {
