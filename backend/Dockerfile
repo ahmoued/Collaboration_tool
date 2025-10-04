@@ -2,7 +2,7 @@ FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
-FROM base AS build
+FROM base AS dev
 RUN npm install
 COPY . .
 RUN npm run build
@@ -13,9 +13,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-COPY --from=build /app/dist ./dist
+COPY --from=dev /app/dist ./dist
 
-COPY --from=build /app/package*.json ./
+COPY --from=dev /app/package*.json ./
 
 EXPOSE 4000
 EXPOSE 1234
