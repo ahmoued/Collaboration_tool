@@ -8,6 +8,7 @@ COPY . .
 CMD ["npm", "test"]
 FROM base AS prod
 RUN npm ci --only=production
+RUN npm install -g concurrently
 COPY . .
 EXPOSE 4000
 EXPOSE 1234
