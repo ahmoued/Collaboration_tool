@@ -1,15 +1,22 @@
 FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
-FROM base AS dev
+
+FROM base AS build
 RUN npm install
-RUN npm install -g tsx
 COPY . .
-CMD ["npm", "test"]
-FROM base AS prod
+RUN npm run build
+
+FROM node:20-alpine AS prod
+WORKDIR /app
+
+COPY package*.json ./
 RUN npm ci --only=production
-RUN npm install -g concurrently
-COPY . .
+
+COPY --from=build /app/dist ./dist
+
+COPY --from=build /app/package*.json ./
+
 EXPOSE 4000
 EXPOSE 1234
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/index.js"]
