@@ -10,7 +10,7 @@
     "yjs": "node yjs-server.cjs",
     "dev:all": "concurrently \"npm run dev\" \"npm run yjs\"",
     "build": "npx tsc",
-    "prod": "node dist/index.js"
+    "start:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
