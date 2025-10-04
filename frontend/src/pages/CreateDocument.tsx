@@ -61,7 +61,7 @@ const NewDocumentPage = () => {
       }
       console.log('content format set')
 
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/docs`, payload, {
+      const response = await axios.post(`http://backend:4000/docs`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

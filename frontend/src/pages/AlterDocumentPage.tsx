@@ -72,14 +72,14 @@ const AlterDocumentPage = () => {
           return;
         }
 
-        const theuser = await axios.get(`${import.meta.env.VITE_API_URL}/users/me`, {
+        const theuser = await axios.get(`http://backend:4000/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         setUser(theuser.data);
 
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/docs/${id}`, {
+        const response = await axios.get(`http://backend:4000/docs/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -119,7 +119,7 @@ const AlterDocumentPage = () => {
       }
 
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/docs/${document.id}`,
+        `http://backend:4000/docs/${document.id}`,
         { title, content: editorContent },
         {
           headers: {

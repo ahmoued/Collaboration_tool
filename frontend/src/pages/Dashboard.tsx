@@ -59,7 +59,7 @@ const Dashboard = () => {
         }
 
         // Fetch user data
-        const userResult = await axios.get(`${import.meta.env.VITE_API_URL}/users/me`, {
+        const userResult = await axios.get(`http://backend:4000/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -67,7 +67,7 @@ const Dashboard = () => {
         setUser(userResult.data);
 
         // Fetch documents
-        const docsResult = await axios.get(`${import.meta.env.VITE_API_URL}/docs`, {
+        const docsResult = await axios.get(`http://backend:4000/docs`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
