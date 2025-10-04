@@ -15,7 +15,8 @@ RUN npm ci --only=production
 RUN npm install -g concurrently
 COPY --from=dev /app/dist ./dist
 
-COPY --from=dev /app/package*.json ./
+COPY --from=dev /app/yjs-server.cjs ./yjs-server.cjs
+COPY --from=dev /app/.env ./.env
 
 EXPOSE 4000
 EXPOSE 1234

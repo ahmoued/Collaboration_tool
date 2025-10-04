@@ -9,13 +9,15 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000", // React dev server
-      "http://localhost:8080",
-      "http://192.168.1.150:8080", // Vite dev server
-      "http://127.0.0.1:5173", // Alternative localhost
+    origin: true 
+    //[
+      //"http://localhost:3000", // React dev server
+      //"http://localhost:8080",
+      //"http://192.168.1.150:8080", // Vite dev server
+      //"http://127.0.0.1:5173", // Alternative localhost
       // Add your production domain here
-    ],
+    //]
+    ,
     credentials: true, // Allow cookies/auth headers
     allowedHeaders: ["Content-Type", "Authorization"],
   })
