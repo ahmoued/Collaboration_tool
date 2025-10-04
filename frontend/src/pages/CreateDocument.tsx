@@ -61,7 +61,7 @@ const NewDocumentPage = () => {
       }
       console.log('content format set')
 
-      const response = await axios.post("http://localhost:4000/docs", payload, {
+      const response = await axios.post("http://process.env.REACT_APP_BACKEND_HOST:4000/docs", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

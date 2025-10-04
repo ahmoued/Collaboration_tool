@@ -58,7 +58,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
       const token = localStorage.getItem("token");
       console.log("Fetching collaborators for document:", documentId);
       const response = await axios.get(
-        `http://localhost:4000/docs/${documentId}/collaborators`,
+        `http://process.env.REACT_APP_BACKEND_HOST:4000/docs/${documentId}/collaborators`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       console.log("Collaborators response:", response.data);
@@ -83,7 +83,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:4000/users/search?username=${encodeURIComponent(
+        `http://process.env.REACT_APP_BACKEND_HOST:4000/users/search?username=${encodeURIComponent(
           query
         )}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -113,7 +113,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:4000/docs/${documentId}/share`,
+        `http://process.env.REACT_APP_BACKEND_HOST:4000/docs/${documentId}/share`,
         { targetUserId: user.id, role },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -134,7 +134,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:4000/documents/${documentId}/collaborators/${userId}`,
+        `http://process.env.REACT_APP_BACKEND_HOST:4000/documents/${documentId}/collaborators/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -204,7 +204,7 @@ const CollaborationManager: React.FC<CollaborationManagerProps> = ({
   }
 
   return (
-    <Card className="w-full max-w-md fixed top-20 right-4 z-50 shadow-xl">
+    <Card className="w-full max-w-md fixed top-32 left-6 z-50 shadow-xl">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">

@@ -12,4 +12,4 @@ RUN npm install -g concurrently
 COPY . .
 EXPOSE 4000
 EXPOSE 1234
-CMD ["npm", "run", "dev:all"]
+CMD ["npm", "run", "start:prod"]

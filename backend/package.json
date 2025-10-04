@@ -9,7 +9,8 @@
     "dev": "tsx watch src/index.ts",
     "yjs": "node yjs-server.cjs",
     "dev:all": "concurrently \"npm run dev\" \"npm run yjs\"",
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
