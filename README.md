@@ -217,14 +217,4 @@ kubectl create secret generic db-credentials \
 - **Separation of Concerns**: Multi-stage Dockerfiles ensure development dependencies stay out of production images, reducing image size and attack surface
 - **Comprehensive Testing**: Integration tests validate API endpoints and database interactions before deployment
 
-## 📝 License
 
-[Add your license here]
-
-## 🤝 Contributing
-
-[Add contribution guidelines here]
-
-## 📧 Contact
-
-[Add your contact information here]
